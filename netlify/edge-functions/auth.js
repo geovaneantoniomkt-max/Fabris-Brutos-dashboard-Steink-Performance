@@ -15,7 +15,7 @@
  */
 
 const COOKIE = "fb_sess";
-const PUBLIC_PATHS = new Set(["/login.css", "/favicon.svg", "/logo.jpg", "/robots.txt"]);
+const PUBLIC_PATHS = new Set(["/login.css", "/favicon.svg", "/favicon.png", "/apple-touch-icon.png", "/logo.jpg", "/robots.txt"]);
 const MAX_FAILS = 5;            // tentativas antes do bloqueio
 const LOCK_MS = 15 * 60 * 1000; // 15 minutos
 const enc = new TextEncoder();
@@ -166,7 +166,8 @@ function loginPage({ error = "", next = "/" } = {}, status = 200) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Acesso restrito · Fabris Brutos</title>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/login.css">
 </head>
 <body>
