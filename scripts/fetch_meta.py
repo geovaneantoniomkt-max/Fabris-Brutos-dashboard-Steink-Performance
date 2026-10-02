@@ -13,9 +13,9 @@ Variáveis de ambiente:
   META_ACCESS_TOKEN   (obrigatória)  token de usuário do sistema / usuário com ads_read,
                                      pages_read_engagement, read_insights, instagram_basic,
                                      instagram_manage_insights, business_management
-  META_AD_ACCOUNT_ID  (padrão COLOQUE_O_ID_DA_CONTA — conta "Fabris Brutos")
-  META_PAGE_ID        (padrão COLOQUE_O_ID_DA_PAGINA — página "Fabris Brutos · Fábrica de Semijoias")
-  META_IG_USER_ID     (padrão COLOQUE_O_ID_DO_INSTAGRAM — @usuario_do_instagram)
+  META_AD_ACCOUNT_ID  (padrão 253656490766623 — conta "Fabris Brutos CA")
+  META_PAGE_ID        (padrão 101325789729120 — página "Fabris Brutos Atacado")
+  META_IG_USER_ID     (vazio = descobre pelo Instagram ligado à página)
   META_API_VERSION    (padrão v23.0)
   OUT_DIR             (padrão public/data)
   META_SINCE / SINCE  (padrão 2024-05-01, YYYY-MM-DD) data inicial da série diária (limite da API: 37 meses)
@@ -38,9 +38,9 @@ import urllib.request
 
 API_VERSION = os.environ.get("META_API_VERSION", "v23.0")
 TOKEN = os.environ.get("META_ACCESS_TOKEN", "").strip()
-ACCOUNT_ID = os.environ.get("META_AD_ACCOUNT_ID", "COLOQUE_O_ID_DA_CONTA").strip().replace("act_", "")
-PAGE_ID = os.environ.get("META_PAGE_ID", "COLOQUE_O_ID_DA_PAGINA").strip()
-IG_ID = os.environ.get("META_IG_USER_ID", "COLOQUE_O_ID_DO_INSTAGRAM").strip()
+ACCOUNT_ID = (os.environ.get("META_AD_ACCOUNT_ID") or "253656490766623").strip().replace("act_", "")
+PAGE_ID = (os.environ.get("META_PAGE_ID") or "101325789729120").strip()
+IG_ID = (os.environ.get("META_IG_USER_ID") or "").strip()
 OUT_DIR = os.environ.get("OUT_DIR", "public/data")
 FORCE_SINCE = (os.environ.get("META_SINCE") or os.environ.get("SINCE") or "2024-05-01").strip()
 
@@ -422,10 +422,13 @@ def fetch_organic(today: dt.date) -> dict:
     since_30 = today - dt.timedelta(days=30)
 
     # ---------------- Facebook -------------------------------------------------------
+    global IG_ID
     page_token = None
     try:
-        p = api(PAGE_ID, {"fields": "id,name,fan_count,followers_count,link,picture{url},access_token"})
+        p = api(PAGE_ID, {"fields": "id,name,fan_count,followers_count,link,picture{url},access_token,instagram_business_account{id}"})
         page_token = p.get("access_token")
+        if not IG_ID:
+            IG_ID = ((p.get("instagram_business_account") or {}).get("id") or "").strip()
         fb = {
             "id": p.get("id"), "name": p.get("name"), "fans": p.get("fan_count"),
             "followers": p.get("followers_count"), "link": p.get("link"),
@@ -487,6 +490,8 @@ def fetch_organic(today: dt.date) -> dict:
 
     # ---------------- Instagram ------------------------------------------------------
     try:
+        if not IG_ID:
+            raise ApiError("nenhum Instagram Business ligado à página")
         ig_tok = page_token or TOKEN
         p = api(IG_ID, {"fields": "id,username,name,followers_count,follows_count,media_count,profile_picture_url,biography,website"}, token=ig_tok)
         ig = {

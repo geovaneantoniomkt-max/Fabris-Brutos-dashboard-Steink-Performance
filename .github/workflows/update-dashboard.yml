@@ -42,28 +42,32 @@ jobs:
         with:
           python-version: "3.12"
 
-      # A Fabris Brutos não investe em Meta Ads. O dashboard precisa de meta.json para
-      # renderizar (inclusive o Google Ads), então geramos um zerado com o mesmo formato.
-      # Quando a conta de Meta Ads entrar: cadastre a variável META_AD_ACCOUNT_ID no
-      # repositório e este passo passa a rodar o coletor real automaticamente.
+      # Coletor real do Meta (conta Fabris Brutos CA 253656490766623, página Fabris Brutos Atacado).
+      # Se o token não tiver acesso à conta, o passo falha sem derrubar o job e o seguinte gera
+      # um meta.json zerado — o Google Ads continua sendo publicado normalmente.
       - name: Coletar dados do Meta (Ads + orgânico)
-        if: ${{ vars.META_AD_ACCOUNT_ID != '' }}
+        id: meta
+        continue-on-error: true
         env:
           META_ACCESS_TOKEN: ${{ secrets.META_ADS_TOKEN || secrets.META_ACCESS_TOKEN }}
-          META_AD_ACCOUNT_ID: ${{ vars.META_AD_ACCOUNT_ID }}
-          META_PAGE_ID: ${{ vars.META_PAGE_ID || 'COLOQUE_O_ID_DA_PAGINA' }}
-          META_IG_USER_ID: ${{ vars.META_IG_USER_ID || 'COLOQUE_O_ID_DO_INSTAGRAM' }}
+          META_AD_ACCOUNT_ID: ${{ vars.META_AD_ACCOUNT_ID || '253656490766623' }}
+          META_PAGE_ID: ${{ vars.META_PAGE_ID || '101325789729120' }}
+          META_IG_USER_ID: ${{ vars.META_IG_USER_ID || '' }}
           META_API_VERSION: ${{ vars.META_API_VERSION || 'v23.0' }}
           META_SINCE: ${{ vars.META_SINCE || '2024-05-01' }}
           OUT_DIR: public/data
         run: python scripts/fetch_meta.py
 
-      - name: Meta Ads zerado (sem conta integrada)
-        if: ${{ vars.META_AD_ACCOUNT_ID == '' }}
+      - name: Meta Ads zerado (coletor sem acesso à conta)
+        if: ${{ steps.meta.outcome == 'failure' }}
         env:
           META_SINCE: ${{ vars.META_SINCE || '2024-05-01' }}
           OUT_DIR: public/data
-        run: python scripts/meta_zerado.py
+        run: |
+          # preserva o orgânico real, se o coletor tiver conseguido gerá-lo
+          [ -f public/data/organic.json ] && cp public/data/organic.json /tmp/organic.json || true
+          python scripts/meta_zerado.py
+          [ -f /tmp/organic.json ] && cp /tmp/organic.json public/data/organic.json || true
 
       - name: Coletar dados do Google Ads
         # Única fonte de dados do dashboard: se falhar, o job para ANTES do deploy e o
