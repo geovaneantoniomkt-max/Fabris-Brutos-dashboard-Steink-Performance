@@ -684,9 +684,9 @@ function renderExec() {
           : "chamadas a partir do anúncio (Google Ads)",
       }),
     tile({
-      label: "Contatos no site e WhatsApp", value: fmt.int(Math.round(gContacts)),
+      label: "Leads do formulário", value: fmt.int(Math.round(gContacts)),
       delta: deltaBadge(gContacts, gContactsPrev),
-      sub: "formulário do site, clique no WhatsApp e botão flutuante",
+      sub: "formulário de lead do site (Google Ads)",
     }),
     tile({
       label: "Conversas no WhatsApp (Meta)", value: fmt.int(all.conversations),
@@ -888,7 +888,7 @@ function renderExec() {
     block("O que está acontecendo", `volume e eficiência · ${fmt.date(state.since)} a ${fmt.date(state.until)}`, kpis, bars),
     block("Como está evoluindo", "dia a dia do período selecionado", charts),
     blockWith("Histórico mensal", "mês a mês — independe do filtro de período do topo", yearSelect, histTable,
-      h("div", { class: "faint", text: "“Contatos” somam as conversões do Google Ads (formulário do site, WhatsApp e ligações) e, quando houver, as conversões do pixel no Meta. Campanhas de topo de funil (tráfego, alcance, engajamento) entram no investimento total, mas não no custo por contato." })),
+      h("div", { class: "faint", text: "“Contatos” somam as conversões do Google Ads (formulário de lead do site) e, quando houver, as conversões do pixel no Meta. Campanhas de topo de funil (tráfego, alcance, engajamento) entram no investimento total, mas não no custo por contato." })),
     block("Onde está o resultado", "e onde o dinheiro está parado", results),
     block("Qual ação tomar", "alertas priorizados por dinheiro em jogo", actions),
   );
@@ -1465,7 +1465,7 @@ function renderLegend() {
       ["Contato", "Resultado principal da Fabris Brutos: um lojista ou revendedor que pediu contato a partir do anúncio — principalmente pelo formulário do site."],
       ["Custo por contato", "Investimento ÷ contatos do período. Meta atual: " + fmt.brl(T.google_cost_per_conversion) + ", tirada da mediana mensal do histórico da conta."],
       ["Ligação", "Chamada iniciada direto do anúncio (categoria “ligação” do Google Ads). Hoje a conta não mede ligações; a linha aparece zerada até essa conversão ser criada."],
-      ["Contato no site e WhatsApp", "Formulário de lead do site (fabrisbrutos.com.br) — a ação marcada como conversão principal na conta."],
+      ["Leads do formulário", "Formulário de lead do site (fabrisbrutos.com.br) — a ação marcada como conversão principal na conta."],
       ["Receita e ROAS", "Só existe quando a plataforma recebe o valor da venda. A venda no atacado é fechada fora do site, sem valor enviado à plataforma, por isso essas colunas ficam com “—”."],
       ["Conversa iniciada", "Pessoas que abriram conversa no WhatsApp a partir de um anúncio de Meta Ads (atribuição de 7 dias após o clique)."],
       ["Conversão (Google)", "Ação marcada como conversão principal na conta do Google Ads. Na Fabris Brutos é uma: “Enviar formulário de lead”, no site."],
