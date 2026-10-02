@@ -183,7 +183,8 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   const path = url.pathname;
 
-  const password = env.DASHBOARD_PASSWORD;
+  // trim: espaço ou quebra de linha colados junto no painel fariam toda senha dar "incorreta"
+  const password = String(env.DASHBOARD_PASSWORD || "").trim();
   const secret = env.SESSION_SECRET;
   const hours = Math.max(1, Math.min(24 * 7, Number(env.SESSION_HOURS) || 12));
 
@@ -249,7 +250,7 @@ export async function onRequest(context) {
       } catch {
         return loginPage({ error: "Requisição inválida." }, 400);
       }
-      const typed = String(form.get("password") || "").slice(0, 200);
+      const typed = String(form.get("password") || "").trim().slice(0, 200);
       const nextPath = safeNext(form.get("next"));
 
       if (typed && (await safeEqual(typed, password))) {

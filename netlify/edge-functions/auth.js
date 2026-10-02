@@ -216,7 +216,8 @@ export default async function handler(request, context) {
   const url = new URL(request.url);
   const path = url.pathname;
 
-  const password = envVar("DASHBOARD_PASSWORD");
+  // trim: espaço ou quebra de linha colados junto no painel fariam toda senha dar "incorreta"
+  const password = String(envVar("DASHBOARD_PASSWORD") || "").trim();
   const secret = envVar("SESSION_SECRET");
   const hours = Math.max(1, Math.min(24 * 7, Number(envVar("SESSION_HOURS")) || 12));
 
@@ -279,7 +280,7 @@ export default async function handler(request, context) {
       } catch {
         return loginPage({ error: "Requisição inválida." }, 400);
       }
-      const typed = String(form.get("password") || "").slice(0, 200);
+      const typed = String(form.get("password") || "").trim().slice(0, 200);
       const nextPath = safeNext(form.get("next"));
 
       if (typed && (await safeEqual(typed, password))) {
