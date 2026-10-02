@@ -111,6 +111,8 @@ const DEF = {
   purchase: { id: "purchase", label: "Contatos", unit: "contato", keys: ["purchase", "offsite_conversion.fb_pixel_purchase", "omni_purchase", "web_in_store_purchase"], valueKeys: ["purchase", "offsite_conversion.fb_pixel_purchase", "omni_purchase"], target: "cost_per_purchase", kind: "lead", rank: 100 },
   add_to_cart: { id: "add_to_cart", label: "Adições ao carrinho", unit: "adição", keys: ["add_to_cart", "offsite_conversion.fb_pixel_add_to_cart", "omni_add_to_cart"], target: "cost_per_add_to_cart", kind: "lead", rank: 70 },
   initiate_checkout: { id: "initiate_checkout", label: "Checkouts iniciados", unit: "checkout", keys: ["initiate_checkout", "offsite_conversion.fb_pixel_initiate_checkout", "omni_initiated_checkout"], target: "cost_per_add_to_cart", kind: "lead", rank: 80 },
+  /* contato consolidado (compra/lead do pixel + conversa + cadastro) — usado na avaliação do bloco de conversão */
+  contact: { id: "contact", label: "Contatos", unit: "contato", metric: "purchases", target: "cost_per_purchase", kind: "lead", rank: 0 },
   conversation: { id: "conversation", label: "Conversas iniciadas", unit: "conversa", keys: ["onsite_conversion.messaging_conversation_started_7d", "onsite_conversion.total_messaging_connection"], target: "cost_per_conversation", kind: "lead", rank: 90 },
   lead: { id: "lead", label: "Cadastros", unit: "cadastro", keys: ["lead", "onsite_conversion.lead_grouped", "leadgen_grouped"], target: "cost_per_conversation", kind: "lead", rank: 85 },
   call: { id: "call", label: "Ligações", unit: "ligação", keys: ["onsite_conversion.click_to_call", "call_confirm_grouped"], target: "cost_per_conversation", kind: "lead", rank: 85 },
@@ -183,7 +185,9 @@ function finish(agg) {
   agg.link_ctr = div(agg.link_clicks * 100, agg.impressions);
   agg.frequency = div(agg.impressions, agg.reach);
   agg.conversations = agg.actions[CONV_KEY] || 0;
-  agg.purchases = countOf(agg, DEF.purchase);
+  /* Na Fabris Brutos o contato do Meta é a conversa no WhatsApp (campanhas de mensagem), não a
+     compra no pixel: "contatos" soma compra/lead do pixel + conversas iniciadas + cadastros. */
+  agg.purchases = countOf(agg, DEF.purchase) + agg.conversations + countOf(agg, DEF.lead);
   agg.add_to_carts = countOf(agg, DEF.add_to_cart);
   agg.revenue = valueOf(agg, DEF.purchase);
   agg.roas = div(agg.revenue, agg.spend);
@@ -657,7 +661,7 @@ function renderExec() {
       delta: deltaBadge(totalSpend, prevTotalSpend, { goodWhenUp: false, kind: "brl" }),
       sub: `Meta ${fmt.brl(all.spend)}${gEnabled() ? ` · Google ${fmt.brl(g.cost)}` : ""}`,
     }),
-    gEnabled()
+    gEnabled() && g.cost > 0
       ? tile({
         label: "Contatos", value: fmt.int(Math.round(all.purchases + g.conversions)), accent: true,
         delta: deltaBadge(all.purchases + g.conversions, prevAll.purchases + gPrev.conversions),
@@ -668,7 +672,7 @@ function renderExec() {
         label: "Contatos", value: fmt.int(all.purchases), accent: true,
         delta: deltaBadge(all.purchases, prevAll.purchases),
         sub: h("span", {}, `${fmt.brl(cap.cost_per_purchase)} cada · meta ${fmt.brl(T.cost_per_purchase)} `,
-          all.purchases > 0 ? badge(assess(cap, DEF.purchase).level, levelWord(assess(cap, DEF.purchase).level)) : null),
+          all.purchases > 0 ? badge(assess(cap, DEF.contact).level, levelWord(assess(cap, DEF.contact).level)) : null),
       }),
     totalRevenue > 0
       ? tile({
@@ -707,7 +711,7 @@ function renderExec() {
       }),
   );
 
-  const metaLevel = assess(cap, DEF.purchase).level;
+  const metaLevel = assess(cap, DEF.contact).level;
   const bars = h("div", { class: "grid c3" },
     platformBar("meta", "Meta Ads · conversão", `meta ${fmt.brl(T.cost_per_purchase)} por contato`, [
       [fmt.brl(cap.spend), "investido em conversão"],
@@ -1003,7 +1007,7 @@ function renderMeta() {
       [fmt.brl(cap.spend), "investido em conversão"],
       [fmt.int(cap.purchases), "contatos"],
       [fmt.brl(cap.cost_per_purchase), "custo por contato"],
-    ], cap.spend > 0 ? assess(cap, DEF.purchase).level : null),
+    ], cap.spend > 0 ? assess(cap, DEF.contact).level : null),
     tile({ label: "Campanhas", value: fmt.int(campRows.length), sub: `${withSpend.length} com investimento no período` }),
     tile({ label: "Dentro da meta", value: fmt.int(onTarget.length), sub: h("span", {}, `de ${withSpend.length}`, withSpend.length ? badge(onTarget.length === withSpend.length ? "ok" : onTarget.length ? "warn" : "crit", `${Math.round((onTarget.length / withSpend.length) * 100)}%`) : null) }),
     tile({

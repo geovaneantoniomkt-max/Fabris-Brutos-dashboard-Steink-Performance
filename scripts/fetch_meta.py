@@ -15,7 +15,7 @@ Variáveis de ambiente:
                                      instagram_manage_insights, business_management
   META_AD_ACCOUNT_ID  (padrão 253656490766623 — conta "Fabris Brutos CA")
   META_PAGE_ID        (padrão 101325789729120 — página "Fabris Brutos Atacado")
-  META_IG_USER_ID     (vazio = descobre pelo Instagram ligado à página)
+  META_IG_USER_ID     (padrão 17841400048201385 — @fabrisbrutos)
   META_API_VERSION    (padrão v23.0)
   OUT_DIR             (padrão public/data)
   META_SINCE / SINCE  (padrão 2024-05-01, YYYY-MM-DD) data inicial da série diária (limite da API: 37 meses)
@@ -40,7 +40,7 @@ API_VERSION = os.environ.get("META_API_VERSION", "v23.0")
 TOKEN = os.environ.get("META_ACCESS_TOKEN", "").strip()
 ACCOUNT_ID = (os.environ.get("META_AD_ACCOUNT_ID") or "253656490766623").strip().replace("act_", "")
 PAGE_ID = (os.environ.get("META_PAGE_ID") or "101325789729120").strip()
-IG_ID = (os.environ.get("META_IG_USER_ID") or "").strip()
+IG_ID = (os.environ.get("META_IG_USER_ID") or "17841400048201385").strip()
 OUT_DIR = os.environ.get("OUT_DIR", "public/data")
 FORCE_SINCE = (os.environ.get("META_SINCE") or os.environ.get("SINCE") or "2024-05-01").strip()
 

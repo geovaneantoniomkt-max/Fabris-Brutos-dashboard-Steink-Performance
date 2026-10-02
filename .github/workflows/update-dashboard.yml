@@ -52,7 +52,7 @@ jobs:
           META_ACCESS_TOKEN: ${{ secrets.META_ADS_TOKEN || secrets.META_ACCESS_TOKEN }}
           META_AD_ACCOUNT_ID: ${{ vars.META_AD_ACCOUNT_ID || '253656490766623' }}
           META_PAGE_ID: ${{ vars.META_PAGE_ID || '101325789729120' }}
-          META_IG_USER_ID: ${{ vars.META_IG_USER_ID || '' }}
+          META_IG_USER_ID: ${{ vars.META_IG_USER_ID || '17841400048201385' }}
           META_API_VERSION: ${{ vars.META_API_VERSION || 'v23.0' }}
           META_SINCE: ${{ vars.META_SINCE || '2024-05-01' }}
           OUT_DIR: public/data
