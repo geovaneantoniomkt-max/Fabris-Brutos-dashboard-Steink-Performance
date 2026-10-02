@@ -189,7 +189,18 @@ export async function onRequest(context) {
 
   if (!password || !secret || String(secret).length < 16) {
     return withSecurityHeaders(
-      new Response("Dashboard não configurado: defina DASHBOARD_PASSWORD e SESSION_SECRET (>= 16 caracteres) nas variáveis do Cloudflare Pages.", {
+      new Response([
+        "Dashboard não configurado: defina DASHBOARD_PASSWORD e SESSION_SECRET (>= 16 caracteres) nas variáveis do Cloudflare Pages.",
+        "",
+        // diagnóstico sem expor valores: só diz o que chegou e quantos caracteres tem
+        password ? "DASHBOARD_PASSWORD: encontrada" : "DASHBOARD_PASSWORD: NAO ENCONTRADA",
+        !secret ? "SESSION_SECRET: NAO ENCONTRADA"
+          : String(secret).length < 16 ? `SESSION_SECRET: curta demais (${String(secret).length} caracteres, minimo 16)`
+          : "SESSION_SECRET: encontrada",
+        `Variaveis visiveis para a funcao: ${Object.keys(env || {}).filter((k) => typeof env[k] === "string").length}`,
+        "",
+        "Cadastre em Settings > Variables and Secrets, ambiente Production, e publique de novo.",
+      ].join("\n"), {
         status: 503,
         headers: { "Content-Type": "text/plain; charset=utf-8" },
       }),
