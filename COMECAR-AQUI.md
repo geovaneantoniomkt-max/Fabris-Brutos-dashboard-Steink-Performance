@@ -4,6 +4,8 @@ Dashboard de performance da **Fabris Brutos · Fábrica de Semijoias** (atacado,
 partir do modelo em `InVet Center`. O passo a passo genérico, com os erros conhecidos, está em
 [`PLAYBOOK-NOVO-CLIENTE.md`](PLAYBOOK-NOVO-CLIENTE.md).
 
+**No ar:** https://fabris-brutos-dashboard-steink-perfor.netlify.app (Netlify, com senha)
+
 ## Já está pronto
 
 - **Google Ads coletado e funcionando.** Conta `100-734-5174` (*Fabris Brutos*), via MCC
