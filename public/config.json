@@ -1,0 +1,46 @@
+{
+  "client": {
+    "name": "Fabris Brutos",
+    "legal_name": "Fabris Brutos · Fábrica de Semijoias",
+    "segment": "Fábrica de semijoias em bruto (atacado)",
+    "market": "Limeira (SP) · atende SP e Sul/Sudeste",
+    "agency": "Steink Performance",
+    "logo": "/logo.jpg",
+    "website": "https://fabrisbrutos.com.br"
+  },
+  "budget": {
+    "meta_monthly": 0,
+    "google_monthly": 500
+  },
+  "_comentario_display": "revenue=false porque a venda no atacado é fechada fora do site: o 'conversions_value' do Google Ads é o valor atribuído ao formulário de lead na conta, não faturamento. Exibir como receita geraria um ROAS falso. Ligue para true só quando houver valor real de venda chegando na plataforma.",
+  "display": {
+    "revenue": false
+  },
+  "_comentario_metas": "Metas tiradas do histórico da conta Google Ads 100-734-5174 (mai/2024 a ago/2025). Custo por lead (formulário do site): mediana mensal de R$ 3,97 nos 13 meses com conversão medida — melhor mês R$ 2,00 (ago/2024), pior R$ 12,27 (mai/2024). Arredondado para R$ 4,00. Verba Google: R$ 500/mês, em linha com os R$ 430–600 investidos por mês no período. Atenção: jun–ago/2025 tiveram R$ 1.330 de gasto e ZERO conversões — o rastreamento do formulário parou, por isso esses meses ficaram fora da mediana. Não há gasto desde 17/08/2025. Meta Ads não é trabalhado hoje: verba zero e métricas zeradas.",
+  "targets": {
+    "cost_per_purchase": 4.0,
+    "cost_per_add_to_cart": 0,
+    "cost_per_conversation": 4.0,
+    "cost_per_profile_visit": 1.5,
+    "google_cost_per_conversion": 4.0,
+    "cpm_topo_max": 10,
+    "ctr_min": 1.0,
+    "frequency_max": 2.5,
+    "min_spend_for_alert": 30
+  },
+  "meta": {
+    "ad_account_id": "",
+    "business_id": "",
+    "page_id": "",
+    "ig_user_id": "",
+    "pixel_id": ""
+  },
+  "instagram": {
+    "username": ""
+  },
+  "google_ads": {
+    "enabled": true,
+    "customer_id": "100-734-5174",
+    "note": "Conta Google Ads da Fabris Brutos: 100-734-5174, gerenciada pelo MCC 295-287-1856 da Steink Performance."
+  }
+}
