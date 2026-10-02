@@ -175,10 +175,10 @@ jobs:
         if: always()
         run: |
           echo "### Dashboard Fabris Brutos" >> "$GITHUB_STEP_SUMMARY"
-          if [ -n "$NETLIFY_AUTH_TOKEN" ]; then
+          if [ -n "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "- Destino: Cloudflare Pages · https://${{ vars.CF_PAGES_PROJECT || 'fabris-brutos-dashboard' }}.pages.dev" >> "$GITHUB_STEP_SUMMARY"
+          elif [ -n "$NETLIFY_AUTH_TOKEN" ]; then
             echo "- Destino: Netlify" >> "$GITHUB_STEP_SUMMARY"
-          elif [ -n "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "- Destino: Cloudflare Pages" >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f public/data/meta.json ]; then
             python - <<'PY' >> "$GITHUB_STEP_SUMMARY"

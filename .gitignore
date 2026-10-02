@@ -31,3 +31,7 @@ deploy-netlify/
 # Lista local de segredos para copiar no GitHub
 SEGREDOS-GITHUB.txt
 .env.meta
+
+# Página provisória usada só para criar o projeto no Cloudflare
+cloudflare-provisorio/
+Logo Fabris Brutos/
