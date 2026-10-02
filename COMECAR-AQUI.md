@@ -32,8 +32,7 @@ partir do modelo em `InVet Center`. O passo a passo genérico, com os erros conh
 
 1. **Credenciais do Google localmente**: copie o `.env.google` de outro cliente (InVet/Nohotel)
    para esta pasta e troque `GOOGLE_ADS_CUSTOMER_ID=100-734-5174`. Depois `python scripts/segredos_github.py`.
-2. **Trocar a logo.** `public/logo.jpg` ainda é a da InVet. Use uma logo quadrada da Fabris Brutos,
-   150px ou mais.
+2. ~~Trocar a logo~~ — feito: monograma "FB" dourado em `public/logo.jpg`.
 3. **Criar o site no Netlify**: `npm run bundle` e arraste a pasta **`deploy-netlify`**
    (não a `public/`, senão o site sobe sem senha).
 4. **Cadastrar a senha** no Netlify (*Environment variables*, All scopes, **sem** "Contains secret
